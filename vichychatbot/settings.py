@@ -119,9 +119,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-ALLOWED_HOSTS = ["3fd7e3ff.ngrok.io", 'localhost', 'a9e6649a.ngrok.io']
+ALLOWED_HOSTS = ["3fd7e3ff.ngrok.io", 'localhost', 'a9e6649a.ngrok.io', 'fadb134e.ngrok.io']
 
-FACEBOOK_VERIFY_TOKEN = 'EAAMLti2oPEoBAEa4CPrMUpdawgLolHRqds2xNVRUTjUSyUENjNnCQHL3PU0vkWE4hh0vlLlJS2SRnvjnvrsAvAoO2XAQsX8pcUQKUx8CPAwx8pUXh8pFY0XzPIlZCD4mcb0ZCPfQLZB86E8UsOamZCKI6T9DkhpfGlnDzfZAH1wZDZD'
+FACEBOOK_VERIFY_TOKEN = '1234'
 
 # CSRF_COOKIE_SECURE = True
 #

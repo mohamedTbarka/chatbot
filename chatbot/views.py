@@ -7,6 +7,7 @@ from django.http.response import HttpResponse
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
+from chatbot.receive import handle_postback, handle_message
 from vichychatbot import settings
 
 # def post_facebook_message(fbid, received_message):
@@ -343,6 +344,58 @@ def post_facebook_message(fbid, recevied_message, request):
     # return status.json()
 
 
+# # Create your views here.
+# class Bot(generic.View):
+#     def get(self, request, *args, **kwargs):
+#         verify_token = settings.FACEBOOK_VERIFY_TOKEN
+#         if self.request.GET['hub.verify_token'] == verify_token:
+#             return HttpResponse(self.request.GET['hub.challenge'])
+#         else:
+#             return HttpResponse('Error, invalid token.')
+#
+#     @csrf_exempt
+#     def dispatch(self, request, *args, **kwargs):
+#         return generic.View.dispatch(self, request, *args, **kwargs)
+#
+#     def post(self, request, *args, **kwargs):
+#         incomming_message = json.loads(self.request.body.decode('utf-8'))
+#
+#         for entry in incomming_message['entry']:
+#             for message in entry['messaging']:
+#                 print(message)
+#                 if 'message' in message:
+#                     print("Message:")
+#                     pprint(message)
+#                     if 'text' in message['message']:
+#                         quick_replies = [
+#                             {
+#                                 "content_type": "text",
+#                                 "title": "Yes!",
+#                                 "payload": "SEND_FORECAST"
+#                             },
+#                             {
+#                                 "content_type": "text",
+#                                 "title": "Nope",
+#                                 "payload": "USER_SAY_NOT"
+#                             }
+#                         ]
+#                         # fbbotw.post_text_w_quickreplies(fbid=message['sender']['id'],
+#                         #                                 message=message['message']['text'], quick_replies=quick_replies)
+#                         #
+#                         # response = fbbotw.post_image_w_quickreplies(
+#                         #     fbid=message['sender']['id'],
+#                         #     image_url='https://i.ibb.co/p2XSb77/vf-peau-normal.png',
+#                         #     quick_replies=quick_replies
+#                         # )
+#
+#                         # fbbotw.post_text_message(fbid=message['sender']['id'], message=message['message']['text'])
+#                         print('-----------sender-id------------')
+#                         print(message['sender']['id'])
+#                         post_facebook_message(message['sender']['id'], message['message']['text'], request)
+#
+#         return HttpResponse()
+
+
 # Create your views here.
 class Bot(generic.View):
     def get(self, request, *args, **kwargs):
@@ -356,41 +409,18 @@ class Bot(generic.View):
     def dispatch(self, request, *args, **kwargs):
         return generic.View.dispatch(self, request, *args, **kwargs)
 
-    @csrf_exempt
     def post(self, request, *args, **kwargs):
         incomming_message = json.loads(self.request.body.decode('utf-8'))
-
         for entry in incomming_message['entry']:
-            for message in entry['messaging']:
-                print(message)
-                if 'message' in message:
-                    print("Message:")
-                    pprint(message)
-                    if 'text' in message['message']:
-                        quick_replies = [
-                            {
-                                "content_type": "text",
-                                "title": "Yes!",
-                                "payload": "SEND_FORECAST"
-                            },
-                            {
-                                "content_type": "text",
-                                "title": "Nope",
-                                "payload": "USER_SAY_NOT"
-                            }
-                        ]
-                        # fbbotw.post_text_w_quickreplies(fbid=message['sender']['id'],
-                        #                                 message=message['message']['text'], quick_replies=quick_replies)
-                        #
-                        # response = fbbotw.post_image_w_quickreplies(
-                        #     fbid=message['sender']['id'],
-                        #     image_url='https://i.ibb.co/p2XSb77/vf-peau-normal.png',
-                        #     quick_replies=quick_replies
-                        # )
+            webhook_event = entry['messaging'][0]
+            sender_psid = webhook_event['sender']['id']
+            webhook_event = json.dumps(webhook_event, indent=2)
+            print('Sender PSID: %s' % sender_psid)
+            print(webhook_event)
 
-                        # fbbotw.post_text_message(fbid=message['sender']['id'], message=message['message']['text'])
-                        print('-----------sender-id------------')
-                        print(message['sender']['id'])
-                        post_facebook_message(message['sender']['id'], message['message']['text'], request)
-
-        return HttpResponse()
+            # Check if the event is a message or postback and pass the event tot the appropriate handler function
+            if 'message' in webhook_event:
+                handle_message(sender_psid, webhook_event['message'])
+            elif 'postback' in webhook_event:
+                handle_postback(sender_psid, webhook_event['postback'])
+        return HttpResponse('EVENT_RECEIVED', status=200)
