@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'chatbot.apps.ChatbotConfig',
     'fbbotw',
     'mptt',
-    'django_admin_generator'
+    'django_admin_generator',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -118,12 +119,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-ALLOWED_HOSTS = ["3fd7e3ff.ngrok.io", 'localhost']
+ALLOWED_HOSTS = ["3fd7e3ff.ngrok.io", 'localhost', 'a9e6649a.ngrok.io']
 
 FACEBOOK_VERIFY_TOKEN = 'EAAMLti2oPEoBAEa4CPrMUpdawgLolHRqds2xNVRUTjUSyUENjNnCQHL3PU0vkWE4hh0vlLlJS2SRnvjnvrsAvAoO2XAQsX8pcUQKUx8CPAwx8pUXh8pFY0XzPIlZCD4mcb0ZCPfQLZB86E8UsOamZCKI6T9DkhpfGlnDzfZAH1wZDZD'
 
-CSRF_COOKIE_SECURE = True
-
-CSRF_COOKIE_HTTPONLY = True
+# CSRF_COOKIE_SECURE = True
+#
+# CSRF_COOKIE_HTTPONLY = True
 
 PAGE_ACCESS_TOKEN = "EAAMLti2oPEoBAEa4CPrMUpdawgLolHRqds2xNVRUTjUSyUENjNnCQHL3PU0vkWE4hh0vlLlJS2SRnvjnvrsAvAoO2XAQsX8pcUQKUx8CPAwx8pUXh8pFY0XzPIlZCD4mcb0ZCPfQLZB86E8UsOamZCKI6T9DkhpfGlnDzfZAH1wZDZD"

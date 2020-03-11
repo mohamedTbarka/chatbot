@@ -389,6 +389,8 @@ class Bot(generic.View):
                         # )
 
                         # fbbotw.post_text_message(fbid=message['sender']['id'], message=message['message']['text'])
+                        print('-----------sender-id------------')
+                        print(message['sender']['id'])
                         post_facebook_message(message['sender']['id'], message['message']['text'], request)
 
         return HttpResponse()
