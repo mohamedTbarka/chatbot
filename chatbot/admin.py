@@ -1,5 +1,6 @@
 # vim: set fileencoding=utf-8 :
 from django.contrib import admin
+from mptt.admin import MPTTModelAdmin
 
 from . import models
 
@@ -179,6 +180,9 @@ class IncommingMsgAdmin(admin.ModelAdmin):
         'timestamp',
     )
     date_hierarchy = 'created_at'
+
+class CustomMPTTModelAdmin(MPTTModelAdmin):
+    mptt_indent_field = ""
 
 
 class BlocAdmin(admin.ModelAdmin):
