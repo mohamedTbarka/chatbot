@@ -119,7 +119,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-ALLOWED_HOSTS = ["3fd7e3ff.ngrok.io", 'localhost', 'a9e6649a.ngrok.io', 'fadb134e.ngrok.io']
+ALLOWED_HOSTS = ["3fd7e3ff.ngrok.io", 'localhost', 'a9e6649a.ngrok.io', 'fadb134e.ngrok.io', 'bfcd1dc8.ngrok.io']
 
 FACEBOOK_VERIFY_TOKEN = '1234'
 

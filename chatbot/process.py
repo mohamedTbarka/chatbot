@@ -90,7 +90,6 @@ def reddit_python():
 '''
 
 
-
 def process(my_command):
     command_to_info = {
         "fox news": {
@@ -133,7 +132,6 @@ if __name__ == "__main__":
             status = requests.post(post_message_url, headers={"Content-Type": "application/json"}, data=response_msg)
             print("Status:")
             pprint(status.json())
-
 
 # Bonjour et bienvenue sur la page officielle de VICHY MAROC :)
 # sélectionner une langue :

@@ -108,6 +108,7 @@ class Bloc(MPTTModel, BaseModel):
     ROOTNODE = 1
     BRANCHNODE = 2
     LEAFNODE = 3
+
     TYPE_CHOICES = (
         (ROOTNODE, 'rootnode'),
         (BRANCHNODE, 'branchnode'),

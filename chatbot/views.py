@@ -300,8 +300,6 @@ def post_facebook_message(fbid, recevied_message, request):
         # request.session['token'] = token
         # msg = random.choice(LOGIC_RESPONSES[token])  # logic to define access to dictionnary
         msg = LOGIC_RESPONSES[recevied_message]
-
-
     else:
         msg = "J'ai pas compris , veuillez entrer un choix valide !! "
         msg = {
@@ -414,13 +412,15 @@ class Bot(generic.View):
         for entry in incomming_message['entry']:
             webhook_event = entry['messaging'][0]
             sender_psid = webhook_event['sender']['id']
-            webhook_event = json.dumps(webhook_event, indent=2)
+            webhook_event_dumped = json.dumps(webhook_event, indent=2)
             print('Sender PSID: %s' % sender_psid)
-            print(webhook_event)
+            print(webhook_event_dumped)
 
             # Check if the event is a message or postback and pass the event tot the appropriate handler function
             if 'message' in webhook_event:
                 handle_message(sender_psid, webhook_event['message'])
+
             elif 'postback' in webhook_event:
                 handle_postback(sender_psid, webhook_event['postback'])
+
         return HttpResponse('EVENT_RECEIVED', status=200)
