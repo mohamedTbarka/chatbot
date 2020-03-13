@@ -1,10 +1,12 @@
 # Create your models here.
-
+import i18n
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 
-
+from chatbot import response as r
 # Create your models here.
+from chatbot.facebook_settings import APP_URL
+
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -132,3 +134,60 @@ class Bloc(MPTTModel, BaseModel):
             return self.parent.name
         else:
             return "root bloc"
+
+
+class Curation:
+    def __init__(self, user, webhookEvent):
+        self.user = user
+        self.webhookEvent = webhookEvent
+
+    @classmethod
+    def handle_payload(cls, payload):
+        pass
+
+    class Meta:
+        abstract = True
+
+
+class Order:
+    @staticmethod
+    def handle_payload(payload):
+        response = dict()
+        if payload == 'TRACK_ORDER':
+            response = r.gen_quick_reply(i18n.t("order.prompt"), [
+                {
+                    "title": i18n.t("order.account"),
+                    payload: "LINK_ORDER"
+                },
+                {
+                    "title": i18n.t("order.search"),
+                    payload: "SEARCH_ORDER"
+                },
+                {
+                    "title": i18n.t("menu.help"),
+                    payload: "CARE_ORDER"
+                }
+            ])
+        elif payload == "SEARCH_ORDER":
+            response = r.gen_text(i18n.t("order.number"))
+        elif payload == "LINK_ORDER":
+            response = [
+                r.gen_text(i18n.t("order.dialog")),
+                r.gen_text(i18n.t("order.searching")),
+                r.gen_image_template(
+                    APP_URL + '/order.png',
+                    i18n.t("order.status")
+                )
+            ]
+        return response
+
+    class Meta:
+        abstract = True
+
+
+class Survey:
+    def handle_payload(self, payload):
+        pass
+
+    class Meta:
+        abstract = True

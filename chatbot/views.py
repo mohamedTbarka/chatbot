@@ -7,7 +7,8 @@ from django.http.response import HttpResponse
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
-from chatbot.receive import handle_postback, handle_message
+from chatbot.facebook_settings import FACEBOOK_VERIFY_TOKEN
+from chatbot.receive import handle_postback, handle_message, Receive
 from vichychatbot import settings
 
 # def post_facebook_message(fbid, received_message):
@@ -397,7 +398,7 @@ def post_facebook_message(fbid, recevied_message, request):
 # Create your views here.
 class Bot(generic.View):
     def get(self, request, *args, **kwargs):
-        verify_token = settings.FACEBOOK_VERIFY_TOKEN
+        verify_token = FACEBOOK_VERIFY_TOKEN
         if self.request.GET['hub.verify_token'] == verify_token:
             return HttpResponse(self.request.GET['hub.challenge'])
         else:
@@ -408,8 +409,25 @@ class Bot(generic.View):
         return generic.View.dispatch(self, request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        incomming_message = json.loads(self.request.body.decode('utf-8'))
-        for entry in incomming_message['entry']:
+        body = json.loads(self.request.body.decode('utf-8'))
+
+        for entry in body['entry']:
+            if "changes" in entry:
+                receive_message = Receive()
+                if entry['changes'][0]['field'] == "feed":
+                    change = entry['changes'][0]['value']
+                    if change['item'] == 'post':
+                        return receive_message.handle_private_reply(
+                            "post_id",
+                            change['post_id']
+                        )
+                    elif change['item'] == 'comment':
+                        return receive_message.handle_private_reply(
+                            "commentgity _id",
+                            change['comment_id']
+                        )
+                    else:
+                        print('Unsupported feed change type.')
             webhook_event = entry['messaging'][0]
             sender_psid = webhook_event['sender']['id']
             webhook_event_dumped = json.dumps(webhook_event, indent=2)
